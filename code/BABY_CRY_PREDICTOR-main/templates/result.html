@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediction Result</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://cdn.pixabay.com/photo/2017/06/16/10/31/crying-baby-2408618_640.jpg') no-repeat center center fixed;
+      color: white;
+      text-align: center;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .navbar button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      margin: 0 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .navbar button:hover {
+      text-decoration: underline;
+      color: #ffcc00;
+    }
+
+    .content-wrapper {
+      margin-top: 100px;
+      background: url('https://cdn.pixabay.com/photo/2017/06/16/10/31/crying-baby-2408618_640.jpg') no-repeat center center fixed;
+    }
+
+    h1 {
+      font-size: 36px;
+    }
+
+    .description {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 30px;
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .prediction {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    .accuracy {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+
+    .home-btn {
+      background: #ffcc00;
+      color: black;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 20px;
+    }
+
+    .home-btn:hover {
+      background: #e6b800;
+    }
+
+    audio {
+      margin-top: 15px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <button onclick="location.href='/'">Home Page</button>
+    <button onclick="location.href='/predict'">Prediction</button>
+    <button onclick="location.href='/evaluation'">Model Evaluation</button>
+    <button onclick="location.href='/about'">About Project</button>
+  </div>
+
+  <div class="content-wrapper">
+    <h1>Prediction Result</h1>
+    <div class="result-box">
+      <p class="prediction">The baby might be crying because of: <strong>{{ prediction }}</strong></p>
+      <p class="accuracy">Model Accuracy: <strong>{{ accuracy }}%</strong></p>
+      <audio controls>
+        <source src="{{ audio_url }}" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+</body>
+</html>

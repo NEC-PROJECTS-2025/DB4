@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Cry Prediction</title>
+  <style>
+    body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: url('https://cdn.pixabay.com/photo/2017/06/16/10/31/crying-baby-2408618_640.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  position: relative;
+  height: 80vh;
+}
+
+   
+
+    /* Dark overlay for readability */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+      z-index: -1;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .navbar button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      margin: 0 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .navbar button:hover {
+      text-decoration: underline;
+      color: #ffcc00;
+    }
+
+    .content-wrapper {
+      margin-top: 80px;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 36px;
+    }
+
+    .section {
+      display: none;
+      margin-top: 50px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .upload-box {
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.3);
+      display: inline-block;
+    }
+
+    input {
+      font-size: 16px;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .upload-btn {
+      background: #ffcc00;
+      color: black;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .upload-btn:hover {
+      background: #e6b800;
+    }
+
+    audio {
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <button onclick="showSection('home')">Home Page</button>
+    <button onclick="showSection('prediction')">Prediction</button>
+    <button onclick="showSection('evaluation')">Model Evaluation</button>
+    <button onclick="showSection('about')">About Project</button>
+  </div>
+
+  <div class="content-wrapper">
+    <div id="home" class="section">
+      <h1>Welcome to CrySage</h1>
+      <p>Our AI model helps parents understand why their baby is crying. Simply upload an audio file of your baby's cry, and our system will analyze it to provide possible reasons.</p>
+      <p>Navigate to the <strong>Prediction</strong> page to upload an audio file and get instant results!</p>
+    </div>
+
+    <div id="prediction" class="section">
+      <h2>Upload Audio for Prediction</h2>
+      <p>Upload a recording of your baby crying, and our AI model will predict the reason for the cry.</p>
+      <div class="upload-box">
+        <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data">
+          <label for="file-upload">Select an audio file:</label>
+          <br>
+          <input type="file" id="file-upload" name="audio" accept=".wav" onchange="playAudio(event)">
+          <br><br>
+          <audio id="audio-player" controls class="hidden"></audio>
+          <br><br>
+          <button type="submit" class="upload-btn">Predict</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="evaluation" class="section">
+      <h2>Model Evaluation</h2>
+      <p>Our baby cry prediction model has been trained using advanced machine learning techniques. We continuously test and improve its accuracy.</p>
+      <p>Key metrics include:</p>
+      <ul>
+        <li>Overall Accuracy: <strong>{{ accuracy }}%</strong></li>
+        <li>Precision & Recall for different cry types</li>
+        <li>Performance on real-world audio samples</li>
+      </ul>
+    </div>
+
+    <div id="about" class="section">
+      <h2>About This Project</h2>
+      <p><strong>CrySage</strong> is a machine learning-based project designed to analyze baby cries and predict possible reasons, such as hunger, discomfort, or colic.</p>
+      <p>It uses deep learning techniques to process audio files and classify them based on cry patterns.</p>
+      <p>Our goal is to help new parents understand their baby's needs better.</p>
+    </div>
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      let sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.style.display = 'none');
+      document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function playAudio(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const allowedTypes = ['audio/wav'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Invalid file format. Please upload a .wav file.');
+          event.target.value = '';
+          return;
+        }
+        
+        const audioPlayer = document.getElementById('audio-player');
+        audioPlayer.src = URL.createObjectURL(file);
+        audioPlayer.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById("upload-form").addEventListener("submit", function (e) {
+      const fileInput = document.getElementById("file-upload");
+      if (!fileInput.value) {
+        alert("Please select an audio file before submitting.");
+        e.preventDefault();
+      }
+    });
+
+    window.onload = function () {
+      showSection('home');
+    };
+  </script>
+
+</body>
+</html>
